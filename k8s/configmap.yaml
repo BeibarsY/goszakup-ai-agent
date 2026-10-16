@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: goszakup-config
+  namespace: goszakup
+data:
+  LLM_BASE_URL: http://ollama:11434/v1
+  LLM_MODEL: qwen2.5:7b
+  LLM_TIMEOUT: "180"
+  TZ: Asia/Almaty
+  UPDATE_OVERLAP_HOURS: "24"
+  UPDATE_FULL_EVERY_DAYS: "7"
+  ETL_MAX_DELETE_SHARE: "0.10"

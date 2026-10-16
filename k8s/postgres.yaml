@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: goszakup
+spec:
+  selector: {app: postgres}
+  ports: [{port: 5432, targetPort: 5432}]
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: goszakup
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels: {app: postgres}
+  template:
+    metadata:
+      labels: {app: postgres}
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+          env:
+            - {name: POSTGRES_USER, value: postgres}
+            - {name: POSTGRES_DB, value: goszakup}
+            - name: POSTGRES_PASSWORD
+              valueFrom: {secretKeyRef: {name: goszakup-secrets, key: POSTGRES_PASSWORD}}
+            - {name: PGDATA, value: /var/lib/postgresql/data/pgdata}
+          ports: [{containerPort: 5432}]
+          readinessProbe:
+            exec: {command: ["pg_isready", "-U", "postgres", "-d", "goszakup"]}
+            periodSeconds: 10
+          resources:
+            requests: {cpu: 500m, memory: 1Gi}
+            limits: {memory: 2Gi}
+          volumeMounts: [{name: pgdata, mountPath: /var/lib/postgresql/data}]
+  volumeClaimTemplates:
+    - metadata: {name: pgdata}
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources: {requests: {storage: 20Gi}}

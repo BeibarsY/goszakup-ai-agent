@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: goszakup
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - postgres.yaml
+  - ollama.yaml
+  - agent.yaml
+  - updater-cronjob.yaml
+# secret.example.yaml не включён: секрет создаётся отдельно (kubectl create secret ...)
+images:
+  - name: goszakup-agent
+    newName: goszakup-agent   # заменить на registry.local/goszakup-agent
+    newTag: latest

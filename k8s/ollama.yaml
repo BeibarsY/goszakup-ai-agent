@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ollama-models
+  namespace: goszakup
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: {requests: {storage: 20Gi}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama
+  namespace: goszakup
+spec:
+  selector: {app: ollama}
+  ports: [{port: 11434, targetPort: 11434}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama
+  namespace: goszakup
+spec:
+  replicas: 1
+  strategy: {type: Recreate}   # том моделей ReadWriteOnce
+  selector:
+    matchLabels: {app: ollama}
+  template:
+    metadata:
+      labels: {app: ollama}
+    spec:
+      initContainers:
+        # загрузка модели в том при первом запуске (сервер поднимается временно внутри init-контейнера);
+        # в закрытом контуре без интернета модель кладётся в PVC заранее
+        - name: pull-model
+          image: ollama/ollama:0.30.10
+          command: ["sh", "-c", "ollama serve & sleep 5 && ollama pull $LLM_MODEL"]
+          env:
+            - name: LLM_MODEL
+              valueFrom: {configMapKeyRef: {name: goszakup-config, key: LLM_MODEL}}
+          volumeMounts: [{name: models, mountPath: /root/.ollama}]
+      containers:
+        - name: ollama
+          image: ollama/ollama:0.30.10
+          env:
+            - {name: OLLAMA_KEEP_ALIVE, value: "-1"}
+            - {name: OLLAMA_NUM_PARALLEL, value: "1"}   # на GPU можно увеличить
+          ports: [{containerPort: 11434}]
+          readinessProbe:
+            httpGet: {path: /api/tags, port: 11434}
+            periodSeconds: 10
+          resources:
+            requests: {cpu: "4", memory: 6Gi}
+            limits: {memory: 8Gi}
+            # с GPU-узлом (NVIDIA device plugin): limits: {nvidia.com/gpu: 1}
+          volumeMounts: [{name: models, mountPath: /root/.ollama}]
+      volumes:
+        - name: models
+          persistentVolumeClaim: {claimName: ollama-models}

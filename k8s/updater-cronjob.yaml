@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: raw-data
+  namespace: goszakup
+spec:
+  accessModes: [ReadWriteOnce]
+  # сырые снимки API (~0,5 ГБ на 27 БИН): ETL пересобирает БД из них, это постоянное хранилище
+  resources: {requests: {storage: 10Gi}}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: updater
+  namespace: goszakup
+spec:
+  schedule: "0 */6 * * *"      # каждые 6 ч: задержка данных ≤ 24 ч с запасом
+  timeZone: Asia/Almaty
+  concurrencyPolicy: Forbid     # плюс pg_advisory_lock внутри update.py
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 21600   # первая полная выгрузка 27 БИН заняла 3,6 ч
+      template:
+        spec:
+          restartPolicy: Never
+          securityContext: {runAsNonRoot: true, runAsUser: 10001, fsGroup: 10001}
+          containers:
+            - name: updater
+              image: goszakup-agent:latest
+              command: ["python", "update.py"]
+              envFrom:
+                - configMapRef: {name: goszakup-config}
+              env:
+                - name: DATABASE_URL
+                  valueFrom: {secretKeyRef: {name: goszakup-secrets, key: DATABASE_URL}}
+                - name: GOSZAKUP_TOKEN
+                  valueFrom: {secretKeyRef: {name: goszakup-secrets, key: GOSZAKUP_TOKEN}}
+              resources:
+                requests: {cpu: 500m, memory: 512Mi}
+                limits: {memory: 1Gi}   # пик ETL ~0,4 ГБ
+              volumeMounts: [{name: raw, mountPath: /app/data}]
+          volumes:
+            - name: raw
+              persistentVolumeClaim: {claimName: raw-data}

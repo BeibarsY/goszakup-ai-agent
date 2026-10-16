@@ -1,0 +1,15 @@
+# Разработка на Mac: агент обращается к Ollama на хосте (ускорение Metal), контейнеры ollama не запускаются.
+#   docker compose -f docker-compose.yml -f docker-compose.host-llm.yml up -d --build
+# На хосте: ollama serve, ollama pull qwen2.5:7b
+
+services:
+  ollama:
+    profiles: ["container-llm"]
+  ollama-pull:
+    profiles: ["container-llm"]
+  agent:
+    environment:
+      LLM_BASE_URL: http://host.docker.internal:11434/v1
+  updater:
+    environment:
+      LLM_BASE_URL: http://host.docker.internal:11434/v1

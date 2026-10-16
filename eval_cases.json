@@ -1,0 +1,874 @@
+[
+ {
+  "id": 1,
+  "lang": "ru",
+  "question": "Найди закупки с отклонением цены больше 30% от средневзвешенной по ЕНС ТРУ",
+  "expect": {
+   "tool": "find_price_anomalies",
+   "args": {
+    "threshold": 0.3,
+    "customer_bin": null,
+    "year": null
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 2,
+  "lang": "ru",
+  "question": "Какие договоры ЦКБ в 2024 году заключены с ценой выше средневзвешенной более чем на 50%?",
+  "expect": {
+   "tool": "find_price_anomalies",
+   "args": {
+    "customer_bin": "990340005977",
+    "year": 2024,
+    "threshold": 0.5
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 3,
+  "lang": "ru",
+  "question": "Покажи ценовые аномалии Больницы МЦ УДП за 2025 год",
+  "expect": {
+   "tool": "find_price_anomalies",
+   "args": {
+    "customer_bin": "990740002243",
+    "year": 2025
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 4,
+  "lang": "ru",
+  "question": "Есть ли переплаты по дизельному топливу относительно средневзвешенной цены?",
+  "expect": {
+   "tool": "find_price_anomalies",
+   "args": {
+    "enstru_code": "192026.510.000000"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 5,
+  "lang": "ru",
+  "question": "Аномалии цен по коду 172211.200.000000 с порогом 20%",
+  "expect": {
+   "tool": "find_price_anomalies",
+   "args": {
+    "enstru_code": "172211.200.000000",
+    "threshold": 0.2
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 6,
+  "lang": "ru",
+  "question": "Найди позиции договоров БИН 020440003656 в 2026 году, где цена выше средневзвешенной в 2 раза (отклонение больше 100%)",
+  "expect": {
+   "tool": "find_price_anomalies",
+   "args": {
+    "customer_bin": "020440003656",
+    "year": 2026,
+    "threshold": 1.0
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 7,
+  "lang": "kz",
+  "question": "ЕНС ТРУ бойынша орташа өлшенген бағадан 30%-дан астам ауытқуы бар сатып алуларды тап",
+  "expect": {
+   "tool": "find_price_anomalies",
+   "args": {
+    "threshold": 0.3,
+    "customer_bin": null
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 8,
+  "lang": "kz",
+  "question": "Беркут авиакомпаниясының бағасы орташа өлшенгеннен жоғары шарттарын көрсет",
+  "expect": {
+   "tool": "find_price_anomalies",
+   "args": {
+    "customer_bin": "000740001307"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 9,
+  "lang": "kz",
+  "question": "2024 жылы Ұлттық госпиталь бойынша баға ауытқулары 40%-дан асатын позициялар қандай?",
+  "expect": {
+   "tool": "find_price_anomalies",
+   "args": {
+    "customer_bin": "231040023028",
+    "year": 2024,
+    "threshold": 0.4
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 10,
+  "lang": "ru",
+  "question": "Оцени адекватность цены лота №83307719-ОК2 относительно контрактов других ведомств в том же городе поставки",
+  "expect": {
+   "tool": "assess_lot_price",
+   "args": {
+    "lot_ref": "83307719-ОК2"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 11,
+  "lang": "ru",
+  "question": "Адекватна ли цена лота 71357952-ЗЦП1 по сравнению с другими ведомствами?",
+  "expect": {
+   "tool": "assess_lot_price",
+   "args": {
+    "lot_ref": "71357952-ЗЦП1"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 12,
+  "lang": "ru",
+  "question": "Справедлива ли цена по лоту 33431522-ОЛ-ЗЦП1?",
+  "expect": {
+   "tool": "assess_lot_price",
+   "args": {
+    "lot_ref": "33431522-ОЛ-ЗЦП1"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 13,
+  "lang": "ru",
+  "question": "Проверь цену лота 42093617-ОЛ-ЗЦП1 относительно рынка",
+  "expect": {
+   "tool": "assess_lot_price",
+   "args": {
+    "lot_ref": "42093617-ОЛ-ЗЦП1"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 14,
+  "lang": "ru",
+  "question": "Не завышена ли цена в лоте с ID 30612409?",
+  "expect": {
+   "tool": "assess_lot_price",
+   "args": {
+    "lot_ref": "30612409"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 15,
+  "lang": "ru",
+  "question": "Fair Price для лота 38958606-ОЛ-ОИ2",
+  "expect": {
+   "tool": "assess_lot_price",
+   "args": {
+    "lot_ref": "38958606-ОЛ-ОИ2"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 16,
+  "lang": "kz",
+  "question": "87928143-ЗЦП1 лотының бағасы басқа ведомстволардың шарттарымен салыстырғанда әділ ме?",
+  "expect": {
+   "tool": "assess_lot_price",
+   "args": {
+    "lot_ref": "87928143-ЗЦП1"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 17,
+  "lang": "kz",
+  "question": "87526165-ЗЦП1 лоты бойынша баға нарыққа сәйкес пе?",
+  "expect": {
+   "tool": "assess_lot_price",
+   "args": {
+    "lot_ref": "87526165-ЗЦП1"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 18,
+  "lang": "kz",
+  "question": "30049899-ОЛ-ЗЦП1 лотының бағасын жеткізу қаласындағы басқа ведомстволармен салыстыр",
+  "expect": {
+   "tool": "assess_lot_price",
+   "args": {
+    "lot_ref": "30049899-ОЛ-ЗЦП1"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 19,
+  "lang": "ru",
+  "question": "Выяви нетипичное завышение количества ТРУ в 2026 году по сравнению с предыдущими годами",
+  "expect": {
+   "tool": "find_volume_spikes",
+   "args": {
+    "customer_bin": null
+   },
+   "gold_args": {
+    "year": 2026
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 20,
+  "lang": "ru",
+  "question": "Где в 2025 году объём закупок вырос нетипично по сравнению с 2024?",
+  "expect": {
+   "tool": "find_volume_spikes",
+   "args": {
+    "year": 2025,
+    "customer_bin": null
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 21,
+  "lang": "ru",
+  "question": "Нетипичный рост количества закупаемых товаров у Дирекции государственных резиденций",
+  "expect": {
+   "tool": "find_volume_spikes",
+   "args": {
+    "customer_bin": "971040001050"
+   },
+   "gold_args": {
+    "year": 2026
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 22,
+  "lang": "ru",
+  "question": "У Больницы МЦ УДП какие товары в 2026 году закупаются в 3 раза больше, чем раньше?",
+  "expect": {
+   "tool": "find_volume_spikes",
+   "args": {
+    "customer_bin": "990740002243",
+    "year": 2026,
+    "min_ratio": 3.0
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 23,
+  "lang": "ru",
+  "question": "Завышение объёмов по сравнению с прошлыми годами у БИН 020440003656",
+  "expect": {
+   "tool": "find_volume_spikes",
+   "args": {
+    "customer_bin": "020440003656"
+   },
+   "gold_args": {
+    "year": 2026
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 24,
+  "lang": "kz",
+  "question": "Ұлттық госпиталь 2025 жылы қандай тауарлардың көлемін алдыңғы жылдармен салыстырғанда асыра көбейтті?",
+  "expect": {
+   "tool": "find_volume_spikes",
+   "args": {
+    "customer_bin": "231040023028",
+    "year": 2025
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 25,
+  "lang": "kz",
+  "question": "2026 жылы ТРУ санының алдыңғы жылдармен салыстырғанда әдеттен тыс өсуін анықта",
+  "expect": {
+   "tool": "find_volume_spikes",
+   "args": {
+    "year": 2026,
+    "customer_bin": null
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 26,
+  "lang": "ru",
+  "question": "Покажи закупки ноутбуков",
+  "expect": {
+   "tool": "search_purchases",
+   "args": {
+    "customer_bin": null,
+    "year": null
+   },
+   "gold_args": {
+    "text": "ноутбук"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 27,
+  "lang": "ru",
+  "question": "Найди закупки бумаги для офиса в 2025 году",
+  "expect": {
+   "tool": "search_purchases",
+   "args": {
+    "year": 2025
+   },
+   "gold_args": {
+    "text": "бумага для офиса"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 28,
+  "lang": "ru",
+  "question": "Какие закупки перчаток были в 2025 году?",
+  "expect": {
+   "tool": "search_purchases",
+   "args": {
+    "year": 2025
+   },
+   "gold_args": {
+    "text": "перчатки"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 29,
+  "lang": "ru",
+  "question": "Найди закупки дизельного топлива авиакомпанией Беркут",
+  "expect": {
+   "tool": "search_purchases",
+   "args": {
+    "customer_bin": "000740001307"
+   },
+   "gold_args": {
+    "text": "дизельное топливо"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 30,
+  "lang": "ru",
+  "question": "Покажи закупки мыла Детским садом Карлыгаш",
+  "expect": {
+   "tool": "search_purchases",
+   "args": {
+    "customer_bin": "100140011059"
+   },
+   "gold_args": {
+    "text": "мыло"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 31,
+  "lang": "kz",
+  "question": "Беркут авиакомпаниясының жанармай сатып алуларын тап",
+  "expect": {
+   "tool": "search_purchases",
+   "args": {
+    "customer_bin": "000740001307"
+   },
+   "gold_args": {
+    "text": "Топливо дизельное"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 32,
+  "lang": "kz",
+  "question": "2024 жылғы қағаз сатып алуларын көрсет",
+  "expect": {
+   "tool": "search_purchases",
+   "args": {
+    "year": 2024
+   },
+   "gold_args": {
+    "text": "Бумага для офисного оборудования"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 33,
+  "lang": "ru",
+  "question": "Сравни цены на 192026.510.000000 между заказчиками",
+  "expect": {
+   "tool": "compare_customers",
+   "args": {
+    "enstru_code": "192026.510.000000"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 34,
+  "lang": "ru",
+  "question": "Бумага офисная: у кого из заказчиков самая высокая цена?",
+  "expect": {
+   "tool": "compare_customers",
+   "args": {
+    "enstru_code": "172314.500.000002"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 35,
+  "lang": "ru",
+  "question": "Сравни цены на картриджи 262040.000.000282 у разных заказчиков",
+  "expect": {
+   "tool": "compare_customers",
+   "args": {
+    "enstru_code": "262040.000.000282"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 36,
+  "lang": "ru",
+  "question": "Кто покупает средство моющее 204132.770.000001 дороже всех?",
+  "expect": {
+   "tool": "compare_customers",
+   "args": {
+    "enstru_code": "204132.770.000001"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 37,
+  "lang": "ru",
+  "question": "Сравнение цен на яйца между организациями",
+  "expect": {
+   "tool": "compare_customers",
+   "args": {
+    "enstru_code": "014721.900.000008"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 38,
+  "lang": "kz",
+  "question": "275126.900.000002 коды бойынша тапсырыс берушілер арасындағы бағаларды салыстыр",
+  "expect": {
+   "tool": "compare_customers",
+   "args": {
+    "enstru_code": "275126.900.000002"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 39,
+  "lang": "kz",
+  "question": "Жұмыртқа бағасын тапсырыс берушілер арасында салыстыр",
+  "expect": {
+   "tool": "compare_customers",
+   "args": {
+    "enstru_code": "014721.900.000008"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 40,
+  "lang": "kz",
+  "question": "Мыло бағасы қай ұйымда ең жоғары?",
+  "expect": {
+   "tool": "compare_customers",
+   "args": {
+    "enstru_code": "204131.900.000000"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 41,
+  "lang": "ru",
+  "question": "Какие закупки Казстройсистемы оказались дороже средней по рынку более чем на 30%?",
+  "expect": {
+   "tool": "find_price_anomalies",
+   "args": {
+    "customer_bin": "050740004819"
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 42,
+  "lang": "kz",
+  "question": "Алатау қонақ үйінің 2025 жылғы шарттарында орташа өлшенген бағадан ауытқу бар ма?",
+  "expect": {
+   "tool": "find_price_anomalies",
+   "args": {
+    "customer_bin": "020240002363",
+    "year": 2025
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 43,
+  "lang": "ru",
+  "question": "Цены по коду 329111.900.000009: где переплата больше 25%?",
+  "expect": {
+   "tool": "find_price_anomalies",
+   "args": {
+    "enstru_code": "329111.900.000009",
+    "threshold": 0.25
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 44,
+  "lang": "ru",
+  "question": "Насколько рыночная цена у лота 82617446-ЗЦП1?",
+  "expect": {
+   "tool": "assess_lot_price",
+   "args": {
+    "lot_ref": "82617446-ЗЦП1"
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 45,
+  "lang": "kz",
+  "question": "66697766-ЗЦП1 лотындағы баға басқа мекемелермен салыстырғанда негізді ме?",
+  "expect": {
+   "tool": "assess_lot_price",
+   "args": {
+    "lot_ref": "66697766-ЗЦП1"
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 46,
+  "lang": "ru",
+  "question": "Лот 32782022-ОЛ-ОИ2: не переплатили ли за продукты?",
+  "expect": {
+   "tool": "assess_lot_price",
+   "args": {
+    "lot_ref": "32782022-ОЛ-ОИ2"
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 47,
+  "lang": "ru",
+  "question": "ТРК Президента в 2026 году резко увеличила объёмы каких-то закупок?",
+  "expect": {
+   "tool": "find_volume_spikes",
+   "args": {
+    "customer_bin": "230740013340",
+    "year": 2026
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 48,
+  "lang": "kz",
+  "question": "Бурабай даму 2025 жылы қай тауарлардың санын 2 еседен артық көбейтті?",
+  "expect": {
+   "tool": "find_volume_spikes",
+   "args": {
+    "customer_bin": "150540000186",
+    "year": 2025,
+    "min_ratio": 2.0
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 49,
+  "lang": "ru",
+  "question": "Покажи закупки бензина в 2026 году",
+  "expect": {
+   "tool": "search_purchases",
+   "args": {
+    "year": 2026
+   },
+   "gold_args": {
+    "text": "бензин"
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 50,
+  "lang": "kz",
+  "question": "Ножовка сатып алулары бойынша тапсырыс берушілердің бағаларын салыстыр",
+  "expect": {
+   "tool": "compare_customers",
+   "args": {
+    "enstru_code": "257320.100.000000"
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 51,
+  "lang": "ru",
+  "question": "У какой организации губки (329111.900.000009) обходятся дороже всего?",
+  "expect": {
+   "tool": "compare_customers",
+   "args": {
+    "enstru_code": "329111.900.000009"
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 52,
+  "lang": "ru",
+  "question": "Найди тепловентиляторы, которые закупало Автохозяйство ДХО",
+  "expect": {
+   "tool": "search_purchases",
+   "args": {
+    "customer_bin": "980440001034"
+   },
+   "gold_args": {
+    "text": "тепловентилятор"
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 53,
+  "lang": "ru",
+  "question": "Кто поставщик по договору ID 21394787 и какая сумма?",
+  "expect": {
+   "tool": "contract_lookup",
+   "args": {
+    "ref": "21394787"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 54,
+  "lang": "ru",
+  "question": "Покажи договор № 511",
+  "expect": {
+   "tool": "contract_lookup",
+   "args": {
+    "ref": "511",
+    "customer_bin": null
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 55,
+  "lang": "ru",
+  "question": "Договор № 1829/1 Больницы МЦ УДП: когда подписан и на какую сумму?",
+  "expect": {
+   "tool": "contract_lookup",
+   "args": {
+    "ref": "1829/1",
+    "customer_bin": "990740002243"
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 56,
+  "lang": "ru",
+  "question": "Сколько договоров заключила Больница МЦ УДП в 2025 году и на какую сумму?",
+  "expect": {
+   "tool": "purchase_analytics",
+   "args": {
+    "customer_bin": "990740002243",
+    "year": 2025
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 57,
+  "lang": "kz",
+  "question": "Беркут авиакомпаниясының 2024 жылғы шарттар саны мен сомасы қанша, бір көзден үлесі қандай?",
+  "expect": {
+   "tool": "purchase_analytics",
+   "args": {
+    "customer_bin": "000740001307",
+    "year": 2024
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 58,
+  "lang": "ru",
+  "question": "Какова доля закупок из одного источника у Дирекции государственных резиденций?",
+  "expect": {
+   "tool": "purchase_analytics",
+   "args": {
+    "customer_bin": "971040001050",
+    "year": null
+   }
+  },
+  "split": "dev"
+ },
+ {
+  "id": 59,
+  "lang": "kz",
+  "question": "240464/01 шарты бойынша жеткізуші кім және сомасы қанша?",
+  "expect": {
+   "tool": "contract_lookup",
+   "args": {
+    "ref": "240464/01"
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 60,
+  "lang": "ru",
+  "question": "Детали договора https://goszakup.gov.kz/ru/egzcontract/cpublic/show/21411500",
+  "expect": {
+   "tool": "contract_lookup",
+   "args": {
+    "ref": "21411500"
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 61,
+  "lang": "kz",
+  "question": "№ 210240033968/260306/00 шарт қашан жасалды?",
+  "expect": {
+   "tool": "contract_lookup",
+   "args": {
+    "ref": "210240033968/260306/00"
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 62,
+  "lang": "ru",
+  "question": "Договор № 1277/1 — кто заказчик и поставщик?",
+  "expect": {
+   "tool": "contract_lookup",
+   "args": {
+    "ref": "1277/1"
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 63,
+  "lang": "ru",
+  "question": "Крупнейшие поставщики Национального госпиталя в 2024 году",
+  "expect": {
+   "tool": "purchase_analytics",
+   "args": {
+    "customer_bin": "231040023028",
+    "year": 2024
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 64,
+  "lang": "ru",
+  "question": "Сколько потратили на дизельное топливо в 2025 году все организации?",
+  "expect": {
+   "tool": "purchase_analytics",
+   "args": {
+    "enstru_code": "192026.510.000000",
+    "year": 2025,
+    "customer_bin": null
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 65,
+  "lang": "kz",
+  "question": "2026 жылы барлық ұйымдардың шарттарының жалпы сомасы қанша?",
+  "expect": {
+   "tool": "purchase_analytics",
+   "args": {
+    "year": 2026,
+    "customer_bin": null
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 66,
+  "lang": "ru",
+  "question": "Сколько договоров у поставщика БИН 941240000193 и на какую сумму?",
+  "expect": {
+   "tool": "purchase_analytics",
+   "args": {
+    "supplier_bin": "941240000193",
+    "customer_bin": null
+   }
+  },
+  "split": "holdout"
+ },
+ {
+  "id": 67,
+  "lang": "ru",
+  "question": "Структура закупок Автохозяйства ДХО по способам закупки",
+  "expect": {
+   "tool": "purchase_analytics",
+   "args": {
+    "customer_bin": "980440001034"
+   }
+  },
+  "split": "holdout"
+ }
+]

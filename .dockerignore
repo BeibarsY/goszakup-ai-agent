@@ -1,0 +1,16 @@
+# секреты и данные в образ не попадают: токен передаётся переменной окружения, данные — томом
+.env
+.env.*
+!.env.example
+data/
+backups/
+logs/
+__pycache__/
+*.pyc
+sample.zip
+schema.json
+eval_results.json
+fetch.log
+*.md
+k8s/
+.git/

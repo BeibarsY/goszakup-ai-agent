@@ -1,0 +1,16 @@
+# секреты: токен API и пароли
+.env
+
+# скачанные данные, резервные копии и журналы (у проверяющего всё скачается заново)
+data/
+backups/
+logs/
+
+# служебное
+__pycache__/
+*.pyc
+.DS_Store
+eval_results.json
+fetch.log
+sample.zip
+

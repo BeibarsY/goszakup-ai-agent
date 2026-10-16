@@ -1,0 +1,105 @@
+# Аналитический агент по госзакупкам: всё одной командой
+#   cp .env.example .env   # заполнить GOSZAKUP_TOKEN, POSTGRES_PASSWORD
+#   docker compose up -d --build
+# Агент: http://localhost:8080 (POST /ask, GET /health). Журнал обновлений: docker compose logs -f updater
+#
+# На Mac модель в контейнере работает только на CPU (медленно); для разработки подключите Ollama на хосте:
+#   docker compose -f docker-compose.yml -f docker-compose.host-llm.yml up -d --build
+
+name: udp_rk   # имя проекта задаёт имя тома udp_rk_pgdata с данными
+
+x-app: &app
+  build: .
+  image: goszakup-agent:latest
+  restart: unless-stopped
+  environment: &app-env
+    DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-postgres}@postgres:5432/goszakup
+    LLM_BASE_URL: ${LLM_BASE_URL:-http://ollama:11434/v1}
+    LLM_MODEL: ${LLM_MODEL:-qwen2.5:7b}
+    LLM_TIMEOUT: ${LLM_TIMEOUT:-180}
+    TZ: Asia/Almaty
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: goszakup-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: goszakup
+    ports:
+      - "5433:5432"   # 5432 на хосте занят другим проектом
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d goszakup"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Локальная LLM (on-prem). Порт наружу не публикуется: на хосте может работать своя Ollama на 11434
+  ollama:
+    image: ollama/ollama:0.30.10
+    restart: unless-stopped
+    environment:
+      OLLAMA_KEEP_ALIVE: "-1"   # модель не выгружается из памяти: без холодного старта 13–15 с
+      OLLAMA_NUM_PARALLEL: "1"  # на CPU параллельные запросы мешают друг другу; очередь предсказуемее
+    volumes:
+      - ollama:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Разовая загрузка модели в том ollama (при повторном запуске проверяет и выходит)
+  ollama-pull:
+    image: ollama/ollama:0.30.10
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    entrypoint: ["ollama", "pull", "${LLM_MODEL:-qwen2.5:7b}"]
+    restart: "no"
+    depends_on:
+      ollama:
+        condition: service_healthy
+
+  agent:
+    <<: *app
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ollama-pull:
+        condition: service_completed_successfully
+        required: false   # с docker-compose.host-llm.yml контейнера с LLM нет
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  # Обновление данных: update.py при старте и каждые UPDATE_INTERVAL_HOURS часов
+  updater:
+    <<: *app
+    command: ["python", "scheduler.py"]
+    environment:
+      <<: *app-env
+      GOSZAKUP_TOKEN: ${GOSZAKUP_TOKEN:?задайте GOSZAKUP_TOKEN в .env}
+      UPDATE_INTERVAL_HOURS: ${UPDATE_INTERVAL_HOURS:-6}
+      UPDATE_OVERLAP_HOURS: ${UPDATE_OVERLAP_HOURS:-24}
+      UPDATE_FULL_EVERY_DAYS: ${UPDATE_FULL_EVERY_DAYS:-7}
+      ETL_MAX_DELETE_SHARE: ${ETL_MAX_DELETE_SHARE:-0.10}
+    volumes:
+      # сырые снимки API: ETL пересобирает БД из них, поэтому это постоянное хранилище, а не кэш
+      - ${RAW_DATA_DIR:-./data}:/app/data
+    stop_grace_period: 2m   # дать update.py откатить транзакцию при остановке
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  ollama:
